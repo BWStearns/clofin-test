@@ -1,0 +1,66 @@
+;; gorilla-repl.fileformat = 1
+
+;; **
+;;; # CLOFIN TEST
+;;; 
+;;; This is a test of using Gorilla to work on some financial clojure code. Specifically to make picking an options strategy easier.
+;;; 
+;; **
+
+;; @@
+(ns mellow-atoll
+  (:require [gorilla-plot.core :as plot]))
+(use '[gorilla-plot.core :as plot])
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-nil'>nil</span>","value":"nil"}
+;; <=
+
+;; @@
+(defrecord Stock [ticker price])
+(comment "Example `(Stock. :TSLA 230.00)`")
+
+(defrecord Strategy [nom profit-function])
+
+(defrecord Option [asset option-type qty strike-price expiration premium])
+(comment "Example `(Option. TSLA :call|:put 100 55.50 some-date 5.50)`")
+
+(defmulti profit-function :option-type)
+
+(defmethod profit-function :long-call
+  [opt]
+  (fn [maturity-price]
+    (- (max (- maturity-price (:strike-price opt)) 0)
+       (:premium opt))))
+
+(defmethod profit-function :long-put
+  [opt]
+  (fn [maturity-price]
+    (- (max (- (:strike-price opt) maturity-price) 0)
+       (:premium opt))))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>#multifn[profit-function 0x376026c4]</span>","value":"#multifn[profit-function 0x376026c4]"}
+;; <=
+
+;; @@
+(def callTSLA (->Option (->Stock :TSLA 350) :long-call 100 360.00 nil 5))
+(def putTSLA (->Option (->Stock :TSLA 350) :long-put 100 340.00 nil 5))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-var'>#&#x27;mellow-atoll/putTSLA</span>","value":"#'mellow-atoll/putTSLA"}
+;; <=
+
+;; @@
+(def profitTSLAcall (profit-function callTSLA))
+(def profitTSLAput (profit-function putTSLA))
+
+(plot/plot (fn [p] (reduce + [(profitTSLAput p) (profitTSLAcall p)])) [300 400])
+;; @@
+;; =>
+;;; {"type":"vega","content":{"width":400,"height":247.2187957763672,"padding":{"top":10,"left":55,"bottom":40,"right":10},"data":[{"name":"aa14ff33-6f82-4e08-b66d-8f52090bbc74","values":[{"x":300,"y":30.0},{"x":301.0,"y":29.0},{"x":302.0,"y":28.0},{"x":303.0,"y":27.0},{"x":304.0,"y":26.0},{"x":305.0,"y":25.0},{"x":306.0,"y":24.0},{"x":307.0,"y":23.0},{"x":308.0,"y":22.0},{"x":309.0,"y":21.0},{"x":310.0,"y":20.0},{"x":311.0,"y":19.0},{"x":312.0,"y":18.0},{"x":313.0,"y":17.0},{"x":314.0,"y":16.0},{"x":315.0,"y":15.0},{"x":316.0,"y":14.0},{"x":317.0,"y":13.0},{"x":318.0,"y":12.0},{"x":319.0,"y":11.0},{"x":320.0,"y":10.0},{"x":321.0,"y":9.0},{"x":322.0,"y":8.0},{"x":323.0,"y":7.0},{"x":324.0,"y":6.0},{"x":325.0,"y":5.0},{"x":326.0,"y":4.0},{"x":327.0,"y":3.0},{"x":328.0,"y":2.0},{"x":329.0,"y":1.0},{"x":330.0,"y":0.0},{"x":331.0,"y":-1.0},{"x":332.0,"y":-2.0},{"x":333.0,"y":-3.0},{"x":334.0,"y":-4.0},{"x":335.0,"y":-5.0},{"x":336.0,"y":-6.0},{"x":337.0,"y":-7.0},{"x":338.0,"y":-8.0},{"x":339.0,"y":-9.0},{"x":340.0,"y":-10},{"x":341.0,"y":-10},{"x":342.0,"y":-10},{"x":343.0,"y":-10},{"x":344.0,"y":-10},{"x":345.0,"y":-10},{"x":346.0,"y":-10},{"x":347.0,"y":-10},{"x":348.0,"y":-10},{"x":349.0,"y":-10},{"x":350.0,"y":-10},{"x":351.0,"y":-10},{"x":352.0,"y":-10},{"x":353.0,"y":-10},{"x":354.0,"y":-10},{"x":355.0,"y":-10},{"x":356.0,"y":-10},{"x":357.0,"y":-10},{"x":358.0,"y":-10},{"x":359.0,"y":-10},{"x":360.0,"y":-10},{"x":361.0,"y":-9.0},{"x":362.0,"y":-8.0},{"x":363.0,"y":-7.0},{"x":364.0,"y":-6.0},{"x":365.0,"y":-5.0},{"x":366.0,"y":-4.0},{"x":367.0,"y":-3.0},{"x":368.0,"y":-2.0},{"x":369.0,"y":-1.0},{"x":370.0,"y":0.0},{"x":371.0,"y":1.0},{"x":372.0,"y":2.0},{"x":373.0,"y":3.0},{"x":374.0,"y":4.0},{"x":375.0,"y":5.0},{"x":376.0,"y":6.0},{"x":377.0,"y":7.0},{"x":378.0,"y":8.0},{"x":379.0,"y":9.0},{"x":380.0,"y":10.0},{"x":381.0,"y":11.0},{"x":382.0,"y":12.0},{"x":383.0,"y":13.0},{"x":384.0,"y":14.0},{"x":385.0,"y":15.0},{"x":386.0,"y":16.0},{"x":387.0,"y":17.0},{"x":388.0,"y":18.0},{"x":389.0,"y":19.0},{"x":390.0,"y":20.0},{"x":391.0,"y":21.0},{"x":392.0,"y":22.0},{"x":393.0,"y":23.0},{"x":394.0,"y":24.0},{"x":395.0,"y":25.0},{"x":396.0,"y":26.0},{"x":397.0,"y":27.0},{"x":398.0,"y":28.0},{"x":399.0,"y":29.0}]}],"marks":[{"type":"line","from":{"data":"aa14ff33-6f82-4e08-b66d-8f52090bbc74"},"properties":{"enter":{"x":{"scale":"x","field":"data.x"},"y":{"scale":"y","field":"data.y"},"stroke":{"value":"#FF29D2"},"strokeWidth":{"value":2},"strokeOpacity":{"value":1}}}}],"scales":[{"name":"x","type":"linear","range":"width","zero":false,"domain":{"data":"aa14ff33-6f82-4e08-b66d-8f52090bbc74","field":"data.x"}},{"name":"y","type":"linear","range":"height","nice":true,"zero":false,"domain":{"data":"aa14ff33-6f82-4e08-b66d-8f52090bbc74","field":"data.y"}}],"axes":[{"type":"x","scale":"x"},{"type":"y","scale":"y"}]},"value":"#gorilla_repl.vega.VegaView{:content {:width 400, :height 247.2188, :padding {:top 10, :left 55, :bottom 40, :right 10}, :data [{:name \"aa14ff33-6f82-4e08-b66d-8f52090bbc74\", :values ({:x 300, :y 30.0} {:x 301.0, :y 29.0} {:x 302.0, :y 28.0} {:x 303.0, :y 27.0} {:x 304.0, :y 26.0} {:x 305.0, :y 25.0} {:x 306.0, :y 24.0} {:x 307.0, :y 23.0} {:x 308.0, :y 22.0} {:x 309.0, :y 21.0} {:x 310.0, :y 20.0} {:x 311.0, :y 19.0} {:x 312.0, :y 18.0} {:x 313.0, :y 17.0} {:x 314.0, :y 16.0} {:x 315.0, :y 15.0} {:x 316.0, :y 14.0} {:x 317.0, :y 13.0} {:x 318.0, :y 12.0} {:x 319.0, :y 11.0} {:x 320.0, :y 10.0} {:x 321.0, :y 9.0} {:x 322.0, :y 8.0} {:x 323.0, :y 7.0} {:x 324.0, :y 6.0} {:x 325.0, :y 5.0} {:x 326.0, :y 4.0} {:x 327.0, :y 3.0} {:x 328.0, :y 2.0} {:x 329.0, :y 1.0} {:x 330.0, :y 0.0} {:x 331.0, :y -1.0} {:x 332.0, :y -2.0} {:x 333.0, :y -3.0} {:x 334.0, :y -4.0} {:x 335.0, :y -5.0} {:x 336.0, :y -6.0} {:x 337.0, :y -7.0} {:x 338.0, :y -8.0} {:x 339.0, :y -9.0} {:x 340.0, :y -10} {:x 341.0, :y -10} {:x 342.0, :y -10} {:x 343.0, :y -10} {:x 344.0, :y -10} {:x 345.0, :y -10} {:x 346.0, :y -10} {:x 347.0, :y -10} {:x 348.0, :y -10} {:x 349.0, :y -10} {:x 350.0, :y -10} {:x 351.0, :y -10} {:x 352.0, :y -10} {:x 353.0, :y -10} {:x 354.0, :y -10} {:x 355.0, :y -10} {:x 356.0, :y -10} {:x 357.0, :y -10} {:x 358.0, :y -10} {:x 359.0, :y -10} {:x 360.0, :y -10} {:x 361.0, :y -9.0} {:x 362.0, :y -8.0} {:x 363.0, :y -7.0} {:x 364.0, :y -6.0} {:x 365.0, :y -5.0} {:x 366.0, :y -4.0} {:x 367.0, :y -3.0} {:x 368.0, :y -2.0} {:x 369.0, :y -1.0} {:x 370.0, :y 0.0} {:x 371.0, :y 1.0} {:x 372.0, :y 2.0} {:x 373.0, :y 3.0} {:x 374.0, :y 4.0} {:x 375.0, :y 5.0} {:x 376.0, :y 6.0} {:x 377.0, :y 7.0} {:x 378.0, :y 8.0} {:x 379.0, :y 9.0} {:x 380.0, :y 10.0} {:x 381.0, :y 11.0} {:x 382.0, :y 12.0} {:x 383.0, :y 13.0} {:x 384.0, :y 14.0} {:x 385.0, :y 15.0} {:x 386.0, :y 16.0} {:x 387.0, :y 17.0} {:x 388.0, :y 18.0} {:x 389.0, :y 19.0} {:x 390.0, :y 20.0} {:x 391.0, :y 21.0} {:x 392.0, :y 22.0} {:x 393.0, :y 23.0} {:x 394.0, :y 24.0} {:x 395.0, :y 25.0} {:x 396.0, :y 26.0} {:x 397.0, :y 27.0} {:x 398.0, :y 28.0} {:x 399.0, :y 29.0})}], :marks [{:type \"line\", :from {:data \"aa14ff33-6f82-4e08-b66d-8f52090bbc74\"}, :properties {:enter {:x {:scale \"x\", :field \"data.x\"}, :y {:scale \"y\", :field \"data.y\"}, :stroke {:value \"#FF29D2\"}, :strokeWidth {:value 2}, :strokeOpacity {:value 1}}}}], :scales [{:name \"x\", :type \"linear\", :range \"width\", :zero false, :domain {:data \"aa14ff33-6f82-4e08-b66d-8f52090bbc74\", :field \"data.x\"}} {:name \"y\", :type \"linear\", :range \"height\", :nice true, :zero false, :domain {:data \"aa14ff33-6f82-4e08-b66d-8f52090bbc74\", :field \"data.y\"}}], :axes [{:type \"x\", :scale \"x\"} {:type \"y\", :scale \"y\"}]}}"}
+;; <=
+
+;; @@
+
+;; @@
