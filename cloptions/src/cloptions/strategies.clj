@@ -25,6 +25,18 @@
     (- (max (- (:strike-price opt) maturity-price) 0)
        (:premium opt))))
 
+(defmethod profit-function :short-call
+  [opt]
+  (fn [maturity-price]
+    (- (:premium opt)
+       (max (- maturity-price (:strike-price opt)) 0))))
+
+(defmethod profit-function :short-put
+  [opt]
+  (fn [maturity-price]
+    (- (:premium opt)
+       (max (- (:strike-price opt) maturity-price) 0))))
+
 
 
 (defn strategy-fn [options]
