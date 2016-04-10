@@ -11,6 +11,15 @@
 ;;
 ;; Multimethod for various option primitives
 ;;
+;; TODO
+;; * DRY the pattern in the profit functions.
+;; * Make options->strategy function
+;; * Make options chain parser to produce records
+;; * Make optimizer for picking from options chains
+;;
+;; * Write valuation models (Black-Scholes, others?)
+;;
+
 (defmulti profit-function :option-type)
 
 (defmethod profit-function :long-call
