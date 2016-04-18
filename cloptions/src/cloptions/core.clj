@@ -1,4 +1,6 @@
-(ns cloptions.core)
+(ns cloptions.core
+  (:require [cloptions.strategies :refer :all]))
+
 
 (defn foo
   "I don't do a whole lot."
