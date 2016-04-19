@@ -14,7 +14,10 @@
 ;; LL160506P00011500       <= Yahoo!
 ;; 160506C00011500-LL-CALL <= Nasdaq
 
-(def ml-opt-parser (instaparse.core/parser
+
+;; I think this might eventually break out a bit to be composed of smaller
+;; grammar fragments so it can be reused in non-options contexts.
+(def opts-parser (instaparse.core/parser
  "OPT           = ML_OPT | YH_OPT | NASDAQ_OPT;
 
   ML_OPT        = TICKER, YR, DY, ML_MO, STRIKE_PRICE;
@@ -36,11 +39,11 @@
 "))
 
 
-(defn x-chop [name & {:keys [x] :or {x "karate"}}]
-  (println "I" x "chop" name))
+(defn parse->option
+  "Doesn't work yet, should "
+  [opt]
+  (opts-parser opt))
 
-
-;; (ml-opt-parser "LL1606E11.5")
 
 ;; (def p$str->int (comp Integer.parseInt str))
 ;; Find a way of using ints or decimals instad of floats because floats fuck finance (f3)
