@@ -8,6 +8,10 @@
 
 
 (deftest options-parser
+
+  (testing "Doesn't parse malformed options"
+    (is (= instaparse.gll.Failure (type (opts-parser "FOOBAR!123-456")))))
+
   (testing "Can parse a BOFA option name"
     (is (= (opts-parser bofa-ll)
            [:OPT
@@ -19,6 +23,7 @@
              [:ML_MO "E"]
              [:STRIKE_PRICE
               [:NUM "1" "1" "." "5"]]]])))
+
   (testing "Can parse a Yahoo option name"
     (is (= (opts-parser yahoo-ll)
            [:OPT
@@ -31,6 +36,7 @@
              [:DIR "P"]
              [:STRIKE_PRICE
               [:NUM "0" "0" "0" "1" "1" "5" "0" "0"]]]])))
+
   (testing "Can parse a NASDAQ option name"
     (is (= (opts-parser nasdaq-ll)
            [:OPT
@@ -50,6 +56,6 @@
 
 (deftest options-parser
   (testing "Identical options parsed from different sources result in the same clojure option record"
-    (is (= (opts-parser bofa-ll)
-           (opts-parser yahoo-ll)
-           (opts-parser nasdaq-ll)))))
+    (is (= (parse->Option bofa-ll)
+           (parse->Option yahoo-ll)
+           (parse->Option nasdaq-ll)))))
